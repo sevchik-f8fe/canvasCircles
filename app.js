@@ -3,11 +3,11 @@
         dotMinRadius: 6,
         dotMaxRadius: 20,
         massFactor: 0.002,
-        defaultColor: `rgba(57, 149, 230, 0.9)`,
+        defaultColor: `rgba(255, 255, 165, 0.9)`,
         smooth: 0.85,
         spherRadius: 300,
-        mainDotRadius: 35,
-        mouseSize: 120,
+        mainDotRadius: 30,
+        mouseSize: 65,
     }
 
     const TWO_PI = 2 * Math.PI;
@@ -38,22 +38,22 @@
         for (let i = 1; i < dots.length; i++) {
             let accration = { x: 0, y: 0 };
 
-            for (let j = 0; j < dots.length; j++) {
+            for (let j = 0, alpha, delta, dist, force; j < dots.length; j++) {
                 if (i == j) continue;
 
                 let [a, b] = [dots[i], dots[j]];
 
-                let delta = {
+                delta = {
                     x: b.position.x - a.position.x,
                     y: b.position.y - a.position.y
                 };
 
-                let dist = Math.sqrt(delta.x * delta.x + delta.y * delta.y) || 1;
-                let force = (dist - config.spherRadius) / dist * b.mass;
+                dist = Math.sqrt(delta.x * delta.x + delta.y * delta.y) || 1;
+                force = (dist - config.spherRadius) / dist * b.mass;
 
                 if (j == 0) {
-                    let alpha = config.mouseSize / dist;
-                    a.color = `rgba(57, 149, 230, ${alpha})`;
+                    alpha = config.mouseSize / dist;
+                    a.color = `rgba(255, 255, 165, ${alpha})`;
                     dist < config.mouseSize ? force = (dist - config.mouseSize) * b.mass : force = a.mass;
                 }
 
@@ -65,7 +65,7 @@
             dots[i].velocity.y = dots[i].velocity.y * config.smooth + accration.y * dots[i].mass;
         }
 
-        dots.map((dot) => dot == dots[0] ? dot.draw(mouse.x, mouse.y) : dot.draw());
+        dots.forEach(dot => dot == dots[0] ? dot.draw(mouse.x, mouse.y) : dot.draw());
     }
 
     function createCircle(x, y, radius, fill, color) {
